@@ -6,6 +6,9 @@
  * in the root directory of this source tree.
  */
 
+#ifndef FASTLCS_H
+#define FASTLCS_H
+
 #include <algorithm>
 #include <string>
 #include <thread>
@@ -62,3 +65,4 @@ vector<int> lcsubstr_length_group(const string& q, const vector<string>& v,
 vector<int> edit_distance_group(const string& q, const vector<string>& v,
             int num_threads = 4);
 
+#endif
