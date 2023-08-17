@@ -391,7 +391,7 @@ vector<int> lcs_length_group(const string& q, const vector<string>& v,
   
   auto n = v.size();
   vector<int> res(n);
-  if (num_threads <= 1) {
+  if (num_threads == 1) {
     for (auto i = 0; i < n; i++)
       res[i] = lcs_length(q, v[i], transform);
     return res;
@@ -425,7 +425,7 @@ vector<int> lcsubstr_length_group(const string& q, const vector<string>& v,
   
   auto n = v.size();
   vector<int> res(n);
-  if (num_threads <= 1) {
+  if (num_threads == 1) {
     for (auto i = 0; i < n; i++)
       res[i] = lcsubstr_length(q, v[i]);
     return res;
@@ -458,7 +458,7 @@ vector<int> edit_distance_group(const string& q, const vector<string>& v, int nu
   
   auto n = v.size();
   vector<int> res(n);
-  if (num_threads <= 1) {
+  if (num_threads == 1) {
     for (auto i = 0; i < n; i++)
       res[i] = edit_distance(q, v[i]);
     return res;
