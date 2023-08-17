@@ -57,12 +57,12 @@ int edit_distance(const string& s1, const string& s2);
 #endif
 
 vector<int> lcs_length_group(const string& q, const vector<string>& v,
-            bool transform = true, int num_threads = 4);
+            bool transform = true, int num_threads = 8);
 
 vector<int> lcsubstr_length_group(const string& q, const vector<string>& v,
-            int num_threads = 4);
+            int num_threads = 8);
 
 vector<int> edit_distance_group(const string& q, const vector<string>& v,
-            int num_threads = 4);
+            int num_threads = 8);
 
 #endif
