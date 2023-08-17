@@ -385,6 +385,9 @@ vector<int> lcs_length_group(const string& q, const vector<string>& v,
             bool transform, int num_threads) {
   if (v.empty())
     return {};
+
+  if (num_threads <= 0)
+    num_threads = thread::hardware_concurrency();
   
   auto n = v.size();
   vector<int> res(n);
@@ -416,6 +419,9 @@ vector<int> lcsubstr_length_group(const string& q, const vector<string>& v,
             int num_threads) {
   if (v.empty())
     return {};
+
+  if (num_threads <= 0)
+    num_threads = thread::hardware_concurrency();
   
   auto n = v.size();
   vector<int> res(n);
@@ -446,6 +452,9 @@ vector<int> lcsubstr_length_group(const string& q, const vector<string>& v,
 vector<int> edit_distance_group(const string& q, const vector<string>& v, int num_threads) {
   if (v.empty())
     return {};
+
+  if (num_threads <= 0)
+    num_threads = thread::hardware_concurrency();
   
   auto n = v.size();
   vector<int> res(n);
