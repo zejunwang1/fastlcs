@@ -6,18 +6,7 @@
  * in the root directory of this source tree.
  */
 
-#include <algorithm>
-#include <string>
-#include <thread>
-#include <vector>
-
-#if __cplusplus >= 201402L
-#include "flat_hash_map/bytell_hash_map.hpp"
-#else
-#include "flat_hash_map/unordered_map.hpp"
-#endif
-
-using namespace std;
+#include "fastlcs.h"
 
 #if __cplusplus >= 201703L
 void split_chars(string_view s, vector<string_view>& res) {
