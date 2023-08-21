@@ -17,9 +17,6 @@
 #include "flat_hash_map/unordered_map.hpp"
 #endif
 
-#include <iostream>
-#include <ctime>
-
 using namespace std;
 
 #if __cplusplus >= 201703L
