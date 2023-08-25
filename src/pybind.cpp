@@ -59,19 +59,19 @@ PYBIND11_MODULE(fastlcs, m) {
         &lcs_length_group,
         py::arg("s1"), py::arg("s2"), 
         py::arg("transform") = true,
-        py::arg("num_threads") = 8
+        py::arg("num_threads") = 0
   );
   
   m.def("lcsubstr_length_group",
         &lcsubstr_length_group,
         py::arg("s1"), py::arg("s2"),
-        py::arg("num_threads") = 8
+        py::arg("num_threads") = 0
   );
   
   m.def("edit_distance_group",
         &edit_distance_group,
         py::arg("s1"), py::arg("s2"),
-        py::arg("num_threads") = 8
+        py::arg("num_threads") = 0
   );
 }
 
