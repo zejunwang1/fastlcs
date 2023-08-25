@@ -1,6 +1,6 @@
 # fastlcs: an efficient tool for solving LCS
 
-**fastlcs** is a super fast c++ library for solving two classic LCS problems as below.
+**fastlcs** is a fast c++ library for solving two classic LCS problems as below.
 
 - [The longest common subsequence](https://en.wikipedia.org/wiki/Longest_common_subsequence) problem is to find the longest subsequence common to all sequences in a set of sequences (often just two sequences). Unlike substrings, subsequences are not required to occupy consecutive positions within the original sequences.
 
