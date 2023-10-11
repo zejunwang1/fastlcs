@@ -323,6 +323,7 @@ int levenshtein_distance(const vector<string>& v1, const vector<string>& v2) {
     dp[j] = j;  
    
   for (auto i = 1; i <= m; i++) {
+    *dp = i;
     top_left = i - 1;
     for (auto j = 1; j <= n; j++) {
       temp = dp[j];
