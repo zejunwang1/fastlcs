@@ -1,8 +1,8 @@
-fastlcs: an efficient tool for solving LCS
-==========================================
+fastlcs: An effective tool for solving LCS problems
+===================================================
 
-**fastlcs** is a super fast c++ library for solving two classic LCS
-problems as below.
+fastlcs is a **header-only** library for solving classic LCS problems as
+below.
 
 -  `The longest common
    subsequence <https://en.wikipedia.org/wiki/Longest_common_subsequence>`__
@@ -22,45 +22,141 @@ problems as below.
    (insertions, deletions or substitutions) required to change one
    string into the other.
 
-We support the following functions:
+We implemented the following functions:
 
--  **lcs_length**: compute the length of the longest common subsequence
-   of two strings.
+-  *lcs_len_dp*: Calculate the length of the longest common subsequence
+   of two strings using dynamic programming.
+-  *lcs_len_map*: Transform LCS length problem into solving LIS
+   (`Longest Increasing
+   Subsequence <https://en.wikipedia.org/wiki/Longest_increasing_subsequence>`__)
+   length.
+-  *lcs_dp*: Calculate the location Information of the longest common
+   subsequence of two strings using dynamic programming.
+-  *lcs_hirschberg*: Calculate the location Information of the longest
+   common subsequence of two strings using `Hirschberg’s
+   algorithm <https://en.wikipedia.org/wiki/Hirschberg%27s_algorithm>`__.
+   It provides a **linear-space** solution.
+-  *lcsubstr_dp / lcsubstr_diag*: Calculate the length and location
+   Information of the longest common substring of two strings using
+   dynamic programming.
+-  *edit_distance*: Calculate the Levenshtein distance between two
+   strings using dynamic programming.
+-  *edit_distance_k*: Given a maximum edit distance, calculate the
+   bounded Levenshtein distance between two strings using `Ukkonen’s
+   algorithm <https://www.cs.helsinki.fi/u/ukkonen/InfCont85.PDF>`__. It
+   is much more performant than edit distance for longer strings.
 
--  **lcs**: get the position of the longest common subsequence in the
-   original string.
+Assume string *a* has length *m*, string *b* has length *n*, the time
+and space complexity of different algorithms are as follows.
 
--  **lcsubstr_length**: compute the length of the longest common
-   substring of two strings.
++-----------------+-------------------+------------------+
+| Algorithm       | Time Complexity   | Space Complexity |
++=================+===================+==================+
+| lcs_len_dp      | O(m*n)            | O(min(m, n))     |
++-----------------+-------------------+------------------+
+| lcs_dp          | O(m*n)            | O(m*n)           |
++-----------------+-------------------+------------------+
+| lcs_hirschberg  | O(m*n)            | O(min(m, n))     |
++-----------------+-------------------+------------------+
+| lcsubstr_dp     | O(m*n)            | O(min(m, n))     |
++-----------------+-------------------+------------------+
+| lcsubstr_diag   | O(m*n)            | O(1)             |
++-----------------+-------------------+------------------+
+| edit_distance   | O(m*n)            | O(min(m, n))     |
++-----------------+-------------------+------------------+
+| edit_distance_k | O(min(m, n) \* k) | O(k)             |
++-----------------+-------------------+------------------+
 
--  **lcsubstr**: get the position of the longest common substring in the
-   original string.
+C++
+---
 
--  **edit_distance**: compute the levenshtein distance between two
-   strings.
+.. code:: cpp
 
--  **lcs_length_group**: compute the length of the longest common
-   subsequence between given string and the string in a list of strings.
-   Return a list of lengths.
+   #include "lcs.h"
 
--  **lcsubstr_length_group**: compute the length of the longest common
-   substring between given string and the string in a list of strings.
-   Return a list of lengths.
+   using namespace fastlcs;
 
--  **edit_distance_group**: compute the levenshtein distance between
-   given string and the string in a list of strings. Return a list of
-   distances.
+   int main() {
+     string s1 = "通过以上分析可见,南京财经大学、中央财经大学和上海立信会计金融学院三所高校税收专业的专业必修课课程设计大同小异,而三个学校专业选修课和实践课课程设置差距较大。";
+     string s2 = "通过对南京财经大学、中央财经大学和上海立信会计金融学院三所高校税收专业的专业必修课、专业选修课和实践教学课的设置进行研究,为本专业课程的调整提供参考。";
 
-In **lcs_length** and **lcs_length_group**, we support transforming the
-problem into solving the length of longest increasing subsequence by
-setting the third parameter of the function to true, processing faster
-in most cases.
+     // lcs_len_dp
+     uint32_t len = lcs_len_dp(s1, s2);
+     cout << "LCS length by lcs_len_dp: " << len << '\n';
 
-Also, fastlcs supports multi-thread processing feature in these
-functions: lcs_length_group/lcsubstr_length_group/edit_distance_group.
+     // lcs_len_map
+     len = lcs_len_map(s1, s2);
+     cout << "LCS length by lcs_len_map: " << len << '\n';
 
-Install
--------
+     // lcs_dp
+     uint32_t size = 0;
+     Tuple* pos1 = lcs_dp(s1, s2, size);
+     cout << "LCS location information by lcs_dp:\n";
+     for (uint32_t i = 0; i < size; ++i)
+       cout << pos1[i].b1 << " " << pos1[i].b2 << " " << pos1[i].len << '\n';
+     if (pos1)
+       free(pos1);
+    
+     // lcs_hirschberg
+     Tuple* pos2 = lcs_hirschberg(s1, s2, size);
+     cout << "LCS location information by lcs_hirschberg:\n";
+     for (uint32_t i = 0; i < size; ++i)
+       cout << pos2[i].b1 << " " << pos2[i].b2 << " " << pos2[i].len << '\n';
+     if (pos2)
+       free(pos2);
+     
+     // lcsubstr_dp or lcsubstr_diag
+     Tuple t1 = lcsubstr_dp(s1, s2); // Tuple t1 = lcsubstr_diag(s1, s2);
+     cout << "LCS substring information by lcsubstr_dp:\n";
+     cout << t1.b1 << " " << t1.b2 << " " << t1.len << '\n';
+     
+     // edit_distance
+     uint32_t distance = edit_distance(s1, s2);
+     cout << "Levenshtein distance by edit_distance: " << distance << '\n';
+     
+     // edit_distance_k
+     distance = edit_distance_k(s1, s2, 40);
+     cout << "Levenshtein distance by edit_distance_k (k = 40): " << distance << '\n';
+     distance = edit_distance_k(s1, s2, 20);
+     cout << "Levenshtein distance by edit_distance_k (k = 20): " << distance << '\n';
+   }
+
+Compile with g++:
+
+.. code:: shell
+
+   g++ example.cpp -o example -O3 -march=native -funroll-loops
+
+.. code:: context
+
+   LCS length by lcs_len_dp: 52
+   LCS length by lcs_len_map: 52
+   LCS location information by lcs_dp:
+   0 0 2
+   9 3 38
+   61 42 8
+   69 52 1
+   70 65 2
+   78 74 1
+   LCS location information by lcs_hirschberg:
+   0 0 2
+   9 3 37
+   47 40 1
+   61 42 8
+   70 52 1
+   72 54 2
+   78 74 1
+   LCS substring information by lcsubstr_dp:
+   9 3 38
+   Levenshtein distance by edit_distance: 38
+   Levenshtein distance by edit_distance_k (k = 40): 38
+   Levenshtein distance by edit_distance_k (k = 20): 20
+
+Python
+------
+
+Installation
+~~~~~~~~~~~~
 
 .. code:: shell
 
@@ -74,126 +170,100 @@ Alternatively,
    cd fastlcs/
    python setup.py install
 
-C++ example
------------
-
-.. code:: cpp
-
-   #include <iostream>
-   #include "fastlcs.h"
-
-   int main() {
-       string s1 = "fastlcs是一个高效的LCS求解工具";
-       string s2 = "fastlcs是一个用于求解两个经典LCS问题的高效C++库";
-
-       cout << "The length of longest common subsequence: " << lcs_length(s1, s2) << endl;
-       cout << "The length of longest common substring: " << lcsubstr_length(s1, s2) << endl;
-       cout << "Edit distance: " << edit_distance(s1, s2) << endl;
-       
-       // The position of LCS in the original string
-       cout << endl << endl;
-       const auto& pos = lcs(s1, s2);    // vector<tuple<int, int, int>>
-       for (const auto& p : pos) {
-           cout << "Start position of part of subsequence in s1: " << get<0>(p) << endl;
-           cout << "Start position of part of subsequence in s2: " << get<1>(p) << endl;
-           cout << "The length of this part: " << get<2>(p) << endl;
-       }
-       
-       // The position of LCS(substring) in the original string
-       cout << endl << endl;
-       const auto& pos_str = lcsubstr(s1, s2);    // tuple<int, int, int>
-       cout << "Start position of substring in s1: " << get<1>(pos_str) << endl;
-       cout << "Start position of substring in s2: " << get<2>(pos_str) << endl;
-       cout << "The length of substring: " << get<0>(pos_str) << endl;
-       
-       // Compute between given string and a list of strings
-       vector<string> list;
-       for (int i = 0; i < 10; i++)
-           list.emplace_back(s2);
-       // vector<int>
-       const auto& length1 = lcs_length_group(s1, list, true, 2);    // transform=true  num_threads=2
-       const auto& length2 = lcsubstr_length_group(s1, list, 2);    // num_threads=2
-       const auto& distance = edit_distance_group(s1, list, 2);    // num_threads=2
-
-       return 0;
-   }
-
-Compile with cmake:
-
-.. code:: shell
-
-   mkdir build
-   cd build
-   cmake ..
-   make
-   ./example
-
-.. code:: context
-
-   The length of longest common subsequence: 13
-   The length of longest common substring: 10
-   Edit distance: 17
-
-
-   Start position of part of subsequence in s1: 0
-   Start position of part of subsequence in s2: 0
-   The length of this part: 10
-   Start position of part of subsequence in s1: 13
-   Start position of part of subsequence in s2: 18
-   The length of this part: 3
-
-
-   Start position of substring in s1: 0
-   Start position of substring in s2: 0
-   The length of substring: 10
-
-Python example
---------------
+example
+~~~~~~~
 
 .. code:: python
 
+   # coding=utf-8
+
    import fastlcs
 
-   s1 = "fastlcs是一个高效的LCS求解工具"
-   s2 = "fastlcs是一个用于求解两个经典LCS问题的高效C++库"
+   s1 = "通过以上分析可见,南京财经大学、中央财经大学和上海立信会计金融学院三所高校税收专业的专业必修课课程设计大同小异,而三个学校专业选修课和实践课课程设置差距较大。"
+   s2 = "通过对南京财经大学、中央财经大学和上海立信会计金融学院三所高校税收专业的专业必修课、专业选修课和实践教学课的设置进行研究,为本专业课程的调整提供参考。"
 
-   print("The length of longest common subsequence: ", fastlcs.lcs_length(s1, s2, transform=True))
-   print("The length of longest common substring: ", fastlcs.lcsubstr_length(s1, s2))
-   print("Edit distance: ", fastlcs.edit_distance(s1, s2))
+   print("LCS length by lcs_len_dp: ", fastlcs.lcs_len_dp(s1, s2))
+   print("LCS length by lcs_len_map: ", fastlcs.lcs_len_map(s1, s2))
 
-   # The position of LCS in the original string
-   pos = fastlcs.lcs(s1, s2)    # list of tuple
-   for p in pos:
-       print("Start position of part of subsequence in s1: ", p[0])
-       print("Start position of part of subsequence in s2: ", p[1])
-       print("The length of this part: ", p[2])
+   print("LCS location information by lcs_dp:")
+   pos = fastlcs.lcs_dp(s1, s2)
+   for instance in pos:
+       # the first element of instance corresponds to the location of longer string
+       print("{}\t{}\t{}".format(instance[0], instance[1], instance[2]))
 
-   # The position of LCS(substring) in the original string
-   pos = fastlcs.lcsubstr(s1, s2)    # tuple
-   print("Start position of substring in s1: ", pos[1])
-   print("Start position of substring in s2: ", pos[2])
-   print("The length of substring: ", pos[0])
+   print("LCS location information by lcs_hirschberg:")
+   pos = fastlcs.lcs_hirschberg(s1, s2)
+   for instance in pos:
+       # the first element of instance corresponds to the location of longer string
+       print("{}\t{}\t{}".format(instance[0], instance[1], instance[2]))
 
-   # Compute between given string and a list of strings
-   s2_list = [s2] * 10
-   len1 = fastlcs.lcs_length_group(s1, s2_list, transform=True, num_threads=2)
-   len2 = fastlcs.lcsubstr_length_group(s1, s2_list, num_threads=2)
-   dist = fastlcs.edit_distance_group(s1, s2_list, num_threads=2)
+   print("LCS substring information by lcsubstr_dp:")
+   pos = fastlcs.lcsubstr_dp(s1, s2) # pos = fastlcs.lcsubstr_diag(s1, s2)
+   # the first element corresponds to the location of longer string
+   print("{}\t{}\t{}".format(pos[0], pos[1], pos[2]))
+
+   print("Levenshtein distance: ", fastlcs.edit_distance(s1, s2))
+   print("Levenshtein distance with k-bounded (k = 40): ", 
+       fastlcs.edit_distance_k(s1, s2, 40))
+   print("Levenshtein distance with k-bounded (k = 20): ", 
+       fastlcs.edit_distance_k(s1, s2, 20))
 
 .. code:: context
 
-   The length of longest common subsequence:  13
-   The length of longest common substring:  10
-   Edit distance:  17
-   Start position of part of subsequence in s1:  0
-   Start position of part of subsequence in s2:  0
-   The length of this part:  10
-   Start position of part of subsequence in s1:  13
-   Start position of part of subsequence in s2:  18
-   The length of this part:  3
-   Start position of substring in s1:  0
-   Start position of substring in s2:  0
-   The length of substring:  10
+   LCS length by lcs_len_dp:  52
+   LCS length by lcs_len_map:  52
+   LCS location information by lcs_dp:
+   0   0   2
+   9   3   38
+   61  42  8
+   69  52  1
+   70  65  2
+   78  74  1
+   LCS location information by lcs_hirschberg:
+   0   0   2
+   9   3   37
+   47  40  1
+   61  42  8
+   70  52  1
+   72  54  2
+   78  74  1
+   LCS substring information by lcsubstr_dp:
+   9   3   38
+   Levenshtein distance:  38
+   Levenshtein distance with k-bounded (k = 40):  38
+   Levenshtein distance with k-bounded (k = 20):  20
+
+Speed
+~~~~~
+
+We compared the processing speed of fastlcs with
+`pylcs <https://github.com/Meteorix/pylcs>`__ on 150,000 similar
+sentence pairs.
+
++---------+--------------------------+-------------+
+| tool    | func                     | time cost/s |
++=========+==========================+=============+
+| fastlcs | lcs_len_dp               | 2.91        |
++---------+--------------------------+-------------+
+| fastlcs | lcs_len_map              | **2.48**    |
++---------+--------------------------+-------------+
+| pylcs   | lcs                      | 9.97        |
++---------+--------------------------+-------------+
+| fastlcs | lcsubstr_dp              | **1.44**    |
++---------+--------------------------+-------------+
+| fastlcs | lcsubstr_diag            | 1.82        |
++---------+--------------------------+-------------+
+| pylcs   | lcs2                     | 9.80        |
++---------+--------------------------+-------------+
+| fastlcs | edit_distance            | 3.41        |
++---------+--------------------------+-------------+
+| fastlcs | edit_distance_k (k = 40) | **0.87**    |
++---------+--------------------------+-------------+
+| pylcs   | edit_distance            | 10.48       |
++---------+--------------------------+-------------+
+
+fastlcs is significantly faster than
+`pylcs <https://github.com/Meteorix/pylcs>`__.
 
 License
 -------

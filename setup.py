@@ -1,4 +1,10 @@
-# coding=utf-8
+#
+# Copyright (c) 2023-present, Zejun Wang.
+# All rights reserved.
+#
+# This source code is licensed under the MIT license found in the
+# LICENSE file in the root directory of this source tree.
+#
 
 from setuptools import setup, Extension
 from setuptools.command.build_ext import build_ext
@@ -28,16 +34,16 @@ class get_pybind_include(object):
 
 ext_modules = [
     Extension(
-        'fastlcs',
-        ['src/fastlcs.cpp', 'src/pybind.cpp'],
+        '_fastlcs',
+        ['python/fastlcs/pybind.cpp'],
         include_dirs=[
+            '.',
             # Path to pybind11 headers
             get_pybind_include(),
-            get_pybind_include(user=True),
-            'src'
+            get_pybind_include(user=True)
         ],
         language='c++',
-        extra_compile_args=["-O3"]
+        extra_compile_args=["-O3", "-march=native", "-funroll-loops"]
     ),
 ]
 
@@ -95,7 +101,7 @@ class BuildExt(build_ext):
         ct = self.compiler.compiler_type
         opts = self.c_opts.get(ct, [])
         extra_link_args = []
-      
+
         if ct == 'unix':
             opts.append('-DVERSION_INFO="%s"' % self.distribution.get_version())
             opts.append(cpp_flag(self.compiler))
@@ -121,14 +127,17 @@ def _get_readme():
 
 setup(
     name='fastlcs',
-    version='0.1.0',
+    version='0.2.0',
     author='wangzejun',
     author_email='wangzejunscut@126.com',
     url='https://github.com/zejunwang1/fastlcs',
-    description='An efficient tool for solving LCS.',
+    description='An effective tool for solving LCS problems.',
     long_description=_get_readme(),
     ext_modules=ext_modules,
     install_requires=['pybind11>=2.2'],
     cmdclass={'build_ext': BuildExt},
+    packages=[str('fastlcs')],
+    package_dir={str(''): str('python')},
     zip_safe=False,
 )
+
