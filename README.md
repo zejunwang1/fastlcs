@@ -1,4 +1,4 @@
-# fastlcs: An effective tool for solving LCS problems
+# fastlcs: header-only library for solving LCS problems
 
 fastlcs is a **header-only** library for solving classic LCS problems as below.
 
