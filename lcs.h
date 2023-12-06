@@ -22,7 +22,7 @@
 
 using namespace std;
 using byte_t = uint_fast8_t;
-using code_t = char16_t;
+using code_t = char32_t;
 
 namespace fastlcs {
 
