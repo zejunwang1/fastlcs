@@ -1,5 +1,5 @@
-fastlcs: An effective tool for solving LCS problems
-===================================================
+fastlcs: header-only library for solving LCS problems
+=====================================================
 
 fastlcs is a **header-only** library for solving classic LCS problems as
 below.
@@ -49,23 +49,17 @@ We implemented the following functions:
 Assume string *a* has length *m*, string *b* has length *n*, the time
 and space complexity of different algorithms are as follows.
 
-+-----------------+-------------------+------------------+
-| Algorithm       | Time Complexity   | Space Complexity |
-+=================+===================+==================+
-| lcs_len_dp      | O(m*n)            | O(min(m, n))     |
-+-----------------+-------------------+------------------+
-| lcs_dp          | O(m*n)            | O(m*n)           |
-+-----------------+-------------------+------------------+
-| lcs_hirschberg  | O(m*n)            | O(min(m, n))     |
-+-----------------+-------------------+------------------+
-| lcsubstr_dp     | O(m*n)            | O(min(m, n))     |
-+-----------------+-------------------+------------------+
-| lcsubstr_diag   | O(m*n)            | O(1)             |
-+-----------------+-------------------+------------------+
-| edit_distance   | O(m*n)            | O(min(m, n))     |
-+-----------------+-------------------+------------------+
-| edit_distance_k | O(min(m, n) \* k) | O(k)             |
-+-----------------+-------------------+------------------+
+=============== ================= ================
+Algorithm       Time Complexity   Space Complexity
+=============== ================= ================
+lcs_len_dp      O(m*n)            O(min(m, n))
+lcs_dp          O(m*n)            O(m*n)
+lcs_hirschberg  O(m*n)            O(min(m, n))
+lcsubstr_dp     O(m*n)            O(min(m, n))
+lcsubstr_diag   O(m*n)            O(1)
+edit_distance   O(m*n)            O(min(m, n))
+edit_distance_k O(min(m, n) \* k) O(k)
+=============== ================= ================
 
 C++
 ---
@@ -168,7 +162,8 @@ Alternatively,
 
    git clone https://github.com/zejunwang1/fastlcs
    cd fastlcs/
-   python setup.py install
+   pip install .
+   # python setup.py install
 
 example
 ~~~~~~~
@@ -240,27 +235,19 @@ We compared the processing speed of fastlcs with
 `pylcs <https://github.com/Meteorix/pylcs>`__ on 150,000 similar
 sentence pairs.
 
-+---------+--------------------------+-------------+
-| tool    | func                     | time cost/s |
-+=========+==========================+=============+
-| fastlcs | lcs_len_dp               | 2.91        |
-+---------+--------------------------+-------------+
-| fastlcs | lcs_len_map              | **2.48**    |
-+---------+--------------------------+-------------+
-| pylcs   | lcs                      | 9.97        |
-+---------+--------------------------+-------------+
-| fastlcs | lcsubstr_dp              | **1.44**    |
-+---------+--------------------------+-------------+
-| fastlcs | lcsubstr_diag            | 1.82        |
-+---------+--------------------------+-------------+
-| pylcs   | lcs2                     | 9.80        |
-+---------+--------------------------+-------------+
-| fastlcs | edit_distance            | 3.41        |
-+---------+--------------------------+-------------+
-| fastlcs | edit_distance_k (k = 40) | **0.87**    |
-+---------+--------------------------+-------------+
-| pylcs   | edit_distance            | 10.48       |
-+---------+--------------------------+-------------+
+======= ======================== ===========
+tool    func                     time cost/s
+======= ======================== ===========
+fastlcs lcs_len_dp               2.91
+fastlcs lcs_len_map              **2.48**
+pylcs   lcs                      9.97
+fastlcs lcsubstr_dp              **1.44**
+fastlcs lcsubstr_diag            1.82
+pylcs   lcs2                     9.80
+fastlcs edit_distance            3.41
+fastlcs edit_distance_k (k = 40) **0.87**
+pylcs   edit_distance            10.48
+======= ======================== ===========
 
 fastlcs is significantly faster than
 `pylcs <https://github.com/Meteorix/pylcs>`__.
