@@ -216,8 +216,12 @@ uint32_t lcs_len_map_impl(const T* data1, uint32_t len1, const T* data2, uint32_
 // Space complexity O(mn)
 template <typename T>
 Tuple* lcs_dp_impl(const T* data1, uint32_t len1, const T* data2, uint32_t len2, uint32_t& size) {
-  if (len1 < len2)
-    return lcs_dp_impl <T> (data2, len2, data1, len1, size);
+  if (len1 < len2) {
+    auto result = lcs_dp_impl <T> (data2, len2, data1, len1, size);
+    for (uint32_t i = 0; i < size; ++i)
+      swap(result[i].b1, result[i].b2);
+    return result;
+  }
   if (len2 == 0)
     return NULL;
   // trim off the matching items at the beginning
@@ -398,8 +402,12 @@ void lcs_hirschberg_recursive(const T* a, uint32_t a_start, uint32_t a_len, cons
 
 template <typename T>
 Tuple* lcs_hirschberg_impl(const T* data1, uint32_t len1, const T* data2, uint32_t len2, uint32_t& size) {
-  if (len1 < len2)
-    return lcs_hirschberg_impl <T> (data2, len2, data1, len1, size);
+  if (len1 < len2) {
+    auto result = lcs_hirschberg_impl <T> (data2, len2, data1, len1, size);
+    for (uint32_t i = 0; i < size; ++i)
+      swap(result[i].b1, result[i].b2);
+    return result;
+  }
   if (len2 == 0)
     return NULL;
   // trim off the matching items at the beginning
@@ -488,8 +496,11 @@ Tuple* lcs_hirschberg_impl(const T* data1, uint32_t len1, const T* data2, uint32
 // Space complexity O(min(m,n))
 template <typename T>
 Tuple lcsubstr_dp_impl(const T* data1, uint32_t len1, const T* data2, uint32_t len2) {
-  if (len1 < len2)
-    return lcsubstr_dp_impl <T> (data2, len2, data1, len1);
+  if (len1 < len2) {
+    auto result = lcsubstr_dp_impl <T> (data2, len2, data1, len1);
+    swap(result.b1, result.b2);
+    return result;
+  }
   Tuple result = {0, 0, 0};
   if (len2 == 0)
     return result;
@@ -518,8 +529,11 @@ Tuple lcsubstr_dp_impl(const T* data1, uint32_t len1, const T* data2, uint32_t l
 
 template <typename T>
 Tuple lcsubstr_diag_impl(const T* data1, uint32_t len1, const T* data2, uint32_t len2) {
-  if (len1 < len2)
-    return lcsubstr_diag_impl <T> (data2, len2, data1, len1);
+  if (len1 < len2) {
+    auto result = lcsubstr_diag_impl <T> (data2, len2, data1, len1);
+    swap(result.b1, result.b2);
+    return result;
+  }
   Tuple result = {0, 0, 0};
   if (len2 == 0)
     return result;
@@ -726,10 +740,6 @@ inline Tuple* lcs_dp(const string& s1, const string& s2, uint32_t& size) {
   uint32_t len1 = unicode <code_t> (s1.data(), s1.size(), data1);
   uint32_t len2 = unicode <code_t> (s2.data(), s2.size(), data2);
   Tuple* result = lcs_dp_impl <code_t> (data1, len1, data2, len2, size);
-  if (len1 < len2) {
-    for (uint32_t i = 0; i < size; i++)
-      swap(result[i].b1, result[i].b2);
-  }
   free(data1);
   free(data2);
   return result;
@@ -745,10 +755,6 @@ inline Tuple* lcs_hirschberg(const string& s1, const string& s2, uint32_t& size)
   uint32_t len1 = unicode <code_t> (s1.data(), s1.size(), data1);
   uint32_t len2 = unicode <code_t> (s2.data(), s2.size(), data2);
   Tuple* result = lcs_hirschberg_impl <code_t> (data1, len1, data2, len2, size);
-  if (len1 < len2) {
-    for (uint32_t i = 0; i < size; i++)
-      swap(result[i].b1, result[i].b2);
-  }
   free(data1);
   free(data2);
   return result;
@@ -765,8 +771,6 @@ inline Tuple lcsubstr_dp(const string& s1, const string& s2) {
   uint32_t len1 = unicode <code_t> (s1.data(), s1.size(), data1);
   uint32_t len2 = unicode <code_t> (s2.data(), s2.size(), data2);
   result = lcsubstr_dp_impl <code_t> (data1, len1, data2, len2);
-  if (len1 < len2)
-    swap(result.b1, result.b2);
   free(data1);
   free(data2);
   return result;
@@ -783,8 +787,6 @@ inline Tuple lcsubstr_diag(const string& s1, const string& s2) {
   uint32_t len1 = unicode <code_t> (s1.data(), s1.size(), data1);
   uint32_t len2 = unicode <code_t> (s2.data(), s2.size(), data2);
   result = lcsubstr_diag_impl <code_t> (data1, len1, data2, len2);
-  if (len1 < len2)
-    swap(result.b1, result.b2);
   free(data1);
   free(data2);
   return result; 
