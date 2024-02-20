@@ -129,7 +129,8 @@ Alternatively,
 ```shell
 git clone https://github.com/zejunwang1/fastlcs
 cd fastlcs/
-python setup.py install
+pip install .
+# python setup.py install
 ```
 
 ### example
