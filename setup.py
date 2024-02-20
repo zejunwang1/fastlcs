@@ -34,16 +34,16 @@ class get_pybind_include(object):
 
 ext_modules = [
     Extension(
-        '_fastlcs',
-        ['python/fastlcs/pybind.cpp'],
+        'fastlcs',
+        ['src/pybind.cpp'],
         include_dirs=[
-            '.',
+            'src',
             # Path to pybind11 headers
             get_pybind_include(),
             get_pybind_include(user=True)
         ],
         language='c++',
-        extra_compile_args=["-O3", "-march=native", "-funroll-loops"]
+        extra_compile_args=["-O3", "-march=native"]
     ),
 ]
 
@@ -127,17 +127,15 @@ def _get_readme():
 
 setup(
     name='fastlcs',
-    version='0.2.0',
+    version='0.3.0',
     author='wangzejun',
     author_email='wangzejunscut@126.com',
     url='https://github.com/zejunwang1/fastlcs',
     description='An effective tool for solving LCS problems.',
-    long_description=_get_readme(),
+    #long_description=_get_readme(),
     ext_modules=ext_modules,
     install_requires=['pybind11>=2.2'],
     cmdclass={'build_ext': BuildExt},
-    packages=[str('fastlcs')],
-    package_dir={str(''): str('python')},
     zip_safe=False,
 )
 
