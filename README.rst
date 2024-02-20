@@ -183,18 +183,15 @@ example
    print("LCS location information by lcs_dp:")
    pos = fastlcs.lcs_dp(s1, s2)
    for instance in pos:
-       # the first element of instance corresponds to the location of longer string
        print("{}\t{}\t{}".format(instance[0], instance[1], instance[2]))
 
    print("LCS location information by lcs_hirschberg:")
    pos = fastlcs.lcs_hirschberg(s1, s2)
    for instance in pos:
-       # the first element of instance corresponds to the location of longer string
        print("{}\t{}\t{}".format(instance[0], instance[1], instance[2]))
 
    print("LCS substring information by lcsubstr_dp:")
    pos = fastlcs.lcsubstr_dp(s1, s2) # pos = fastlcs.lcsubstr_diag(s1, s2)
-   # the first element corresponds to the location of longer string
    print("{}\t{}\t{}".format(pos[0], pos[1], pos[2]))
 
    print("Levenshtein distance: ", fastlcs.edit_distance(s1, s2))
